@@ -1,6 +1,6 @@
-const Article = require("../models/artilcle-model");
 const cron=require('node-cron')
 const axios=require('axios')
+const Article = require('../models/article-model')
 
 const task=()=>{
     
@@ -8,18 +8,20 @@ const task=()=>{
     cron.schedule('*/2 * * * *', async()=>{
         try {
             const { data } = await axios.get(`${process.env.BASE_URL}?rss_url=https://timesofindia.indiatimes.com/rssfeedstopstories.cms&count=${process.env.ARTICLES_COUNT}&api_key=${process.env.API_KEY}`)
-            // console.log(data)
             const articles = data.items.map(article => {
-                return {...article, 
+                return {
+                    ...article, 
                     pubDate : article.pubDate.split(' ').join('T'), 
                     description:article.description.split('>')[1],
-                    source : 'Times Of India', 
+                    source : 'Times of India', 
                     category : 'Top Stories'
                 }
             })
-            const insertedArticles = await Article.insertMany(articles, {ordered : false})
+        const insertedArticles = await Article.insertMany(articles, {ordered : false})
         }catch(error){
-            console.log(error)
+            if(error.code !== 11000){
+                console.log(error)
+            }
         }
         console.log('running a task every two minutes',new Date())
     })
@@ -27,19 +29,21 @@ const task=()=>{
     //Times of India Most Recent Stories Feed
     cron.schedule('*/2 * * * *',async()=>{
         try {
-           const { data }=await axios.get(`${process.env.BASE_URL}?rss_url=https://timesofindia.indiatimes.com/rssfeedmostrecent.cms&count=${process.env.ARTICLES_COUNT}&api_key=${process.env.API_KEY}`) 
-           const articles=data.items.map(article=>{
+            const { data }=await axios.get(`${process.env.BASE_URL}?rss_url=https://timesofindia.indiatimes.com/rssfeedmostrecent.cms&count=${process.env.ARTICLES_COUNT}&api_key=${process.env.API_KEY}`) 
+            const articles=data.items.map(article=>{
             return{
                     ...article,
                     pubDate : article.pubDate.split(' ').join('T'), 
                     description : article.description.split('>')[1],
-                    source : 'Times Of India', 
+                    source : 'Times of India', 
                     category : 'most recent stories'
                   }
            })
            const insertedArticles = await Article.insertMany(articles,{ordered : false})
         } catch (error) {
-            console.log(error)
+            if(error.code !== 11000){
+                console.log(error)
+            }
         }
     })
 
@@ -51,13 +55,15 @@ const task=()=>{
                 return {...article, 
                     pubDate : article.pubDate.split(' ').join('T'), 
                     description : article.description.split('</a>')[1],
-                    source : 'Times Of India', 
+                    source : 'Times of India', 
                     category : 'cricket'
                 }
             })
             const insertedArticles = await Article.insertMany(articles,{ordered : false})
         } catch (error) {
-            console.log(error)
+            if(error.code !== 11000){
+                console.log(error)
+            }
         }
     })
 
@@ -69,13 +75,15 @@ const task=()=>{
                 return {...article, 
                     pubDate : article.pubDate.split(' ').join('T'), 
                     description : article.description.split('</a>')[1],
-                    source : 'Times Of India', 
+                    source : 'Times of India', 
                     category : 'environment'
                 }
             })
             const insertedArticles = await Article.insertMany(articles,{ordered : false})
         } catch (error) {
-            console.log(error)
+            if(error.code !== 11000){
+                console.log(error)
+            }
         }
     })
 
@@ -88,13 +96,15 @@ const task=()=>{
                 return {...article, 
                     pubDate : article.pubDate.split(' ').join('T'), 
                     description : article.description.split('</a>')[1],
-                    source : 'Times Of India', 
+                    source : 'Times of India', 
                     category : 'education'
                 }
             })
             const insertedArticles = await Article.insertMany(articles,{ordered : false})
         } catch (error) {
-            console.log(error)
+            if(error.code !== 11000){
+                console.log(error)
+            }
         }
     })
 }

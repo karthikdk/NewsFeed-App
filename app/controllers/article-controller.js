@@ -1,5 +1,4 @@
-const Article = require("../models/artilcle-model");
-
+const Article = require("../models/article-model")
 const articleController={}
 
 articleController.list=async(req,res)=>{

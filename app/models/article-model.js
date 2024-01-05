@@ -13,7 +13,6 @@ const articleSchema=new Schema({
     },
     pubDate:{
         type:String,
-        required:true,
         unique:true
     },
     link:{
