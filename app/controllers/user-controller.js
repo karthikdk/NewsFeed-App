@@ -8,11 +8,11 @@ const userController={}
 
 userController.register=async(req,res)=>{
     try {
-        const body=pick(req.body,['username','email','password'])
+        const body=pick(req.body,['name','email','password'])
         if(Object.keys(body).length===0){
             return res.status(404).json({error: "data fields not found"})
         }
-        if(!body.email || !body.username || !body.password ){
+        if(!body.email || !body.name || !body.password ){
             return res.status(400).json({error: "invalid data values"})
         }
         if(!validator.isEmail(body.email)) {
@@ -69,7 +69,7 @@ userController.login=async(req,res)=>{
 }
 userController.users=async(req,res)=>{
     try {
-        const user=await User.find({})
+        const user=await User.findById(req.tokenData._id, {password : 0})
         res.json(user)
     } catch (error) {
         res.json(error)
