@@ -2,7 +2,6 @@ const cron=require('node-cron')
 const axios=require('axios')
 const Article = require('../models/article-model')
 
-
 const task=()=>{
     
     //Times Of India Top Stories Feed
@@ -13,8 +12,9 @@ const task=()=>{
             const articles = data.items.map(article => {
                 return {...article, 
                     pubDate : article.pubDate.split(' ').join('T'),
-                    source : 'Times of India', 
-                    category : 'latest'
+                    description : article.description.split('>')[1],
+                    source : 'TOI', 
+                    category : 'Top Stories'
                 }
             })
         const insertedArticles = await Article.insertMany(articles, {ordered : false})
@@ -26,16 +26,16 @@ const task=()=>{
         console.log('running a task every two minutes',new Date())
     })
 
-    //Times of India Most Recent Stories Feed
+    //Times of India World Feed
     cron.schedule('*/2 * * * *',async()=>{
         try {
-            const { data }=await axios.get(`${process.env.BASE_URL}?rss_url=https://timesofindia.indiatimes.com/rssfeedmostrecent.cms&count=${process.env.ARTICLES_COUNT}&api_key=${process.env.API_KEY}`) 
+            const { data }=await axios.get(`${process.env.BASE_URL}?rss_url=https://timesofindia.indiatimes.com/rssfeeds/296589292.cms&count=${process.env.ARTICLES_COUNT}&api_key=${process.env.API_KEY}`) 
             const articles=data.items.map(article=>{
             return{ ...article,
                     pubDate : article.pubDate.split(' ').join('T'), 
                     description : article.description.split('>')[1],
-                    source : 'Times of India', 
-                    category : 'recent'
+                    source : 'TOI', 
+                    category : 'World'
                   }
            })
            const insertedArticles = await Article.insertMany(articles,{ordered : false})
@@ -54,8 +54,8 @@ const task=()=>{
                 return {...article, 
                     pubDate : article.pubDate.split(' ').join('T'), 
                     description : article.description.split('</a>')[1],
-                    source : 'Times of India', 
-                    category : 'cricket'
+                    source : 'TOI', 
+                    category : 'Cricket'
                 }
             })
             const insertedArticles = await Article.insertMany(articles,{ordered : false})
@@ -75,8 +75,8 @@ const task=()=>{
                 return {...article, 
                     pubDate : article.pubDate.split(' ').join('T'), 
                     description : article.description.split('</a>')[1],
-                    source : 'Times of India', 
-                    category : 'environment'
+                    source : 'TOI', 
+                    category : 'Environment'
                 }
             })
             const insertedArticles = await Article.insertMany(articles,{ordered : false})
@@ -96,8 +96,8 @@ const task=()=>{
                 return {...article, 
                     pubDate : article.pubDate.split(' ').join('T'), 
                     description : article.description.split('</a>')[1],
-                    source : 'Times of India', 
-                    category : 'education'
+                    source : 'TOI', 
+                    category : 'Education'
                 }
             })
             const insertedArticles = await Article.insertMany(articles,{ordered : false})
