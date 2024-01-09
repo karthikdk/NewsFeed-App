@@ -5,10 +5,11 @@ const configureDB = require('./config/db')
 const userController = require('./app/controllers/user-controller')
 const authenticateUser = require("./app/middlewares/authenticate-user")
 const task = require("./app/node-cron/cron-job")
-const articleController = require("./app/controllers/article-controller")
+const articlesController = require("./app/controllers/article-controller")
 
 
-const port=3060
+
+const port=process.env.PORT || 3060
 
 const app=express()
 app.use(express.json())
@@ -24,7 +25,7 @@ app.post('/api/users/login',userController.login)
 app.get('/api/users/account',authenticateUser,userController.users)
 
 //article API
-app.get('/api/articles/list',articleController.list)
+app.get('/api/articles/list',articlesController.list)
 
 app.listen(port,()=>{
     console.log('server running on port',port)

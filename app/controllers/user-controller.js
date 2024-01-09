@@ -1,4 +1,4 @@
-const User = require("../models/user-model");
+const User = require("../models/user-model")
 const jwt=require('jsonwebtoken')
 const pick=require('lodash/pick')
 const bcrypt=require('bcryptjs')
@@ -9,6 +9,7 @@ const userController={}
 userController.register=async(req,res)=>{
     try {
         const body=pick(req.body,['name','email','password'])
+
         if(Object.keys(body).length===0){
             return res.status(404).json({error: "data fields not found"})
         }

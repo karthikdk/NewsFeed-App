@@ -1,41 +1,35 @@
-const mongoose=require('mongoose')
+const mongoose = require('mongoose')
 
-const {Schema}=mongoose
+const Schema = mongoose.Schema
 
-const articleSchema=new Schema({
-    title:{
-        type:String,
-        required:true
+const articleSchema = new Schema({
+    pubDate : {
+        type : String,
+        unique : true
     },
-    guid:{
-        type:String,
-        required:true
+    guid : {
+        type : String
     },
-    pubDate:{
-        type:String,
-        unique:true
+    title : {
+        type : String
     },
-    link:{
-        type:String,
-        required:true
+    link : {
+        type : String
     },
-    thumbnail:{
-        type:String,
-        required:true
+    thumbnail : {
+        type : String
     },
-    description:{
-        type:String,
-        required:true
+    description : {
+        type : String
     },
-    source:{
-        type:String,
-        required:true
+    source : {
+        type : String
     },
-    category:{
-        type:String,
-        required:true
+    category : {
+        type : String
     }
-},{timestamps:true})
+}, {timestamps : true})
 
-const Article=mongoose.model('Article',articleSchema)
-module.exports=Article
+const Article = mongoose.model('Article',articleSchema)
+
+module.exports = Article

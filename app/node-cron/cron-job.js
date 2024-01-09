@@ -2,19 +2,19 @@ const cron=require('node-cron')
 const axios=require('axios')
 const Article = require('../models/article-model')
 
+
 const task=()=>{
     
-    //Times Of India Top Strories Feed
+    //Times Of India Top Stories Feed
     cron.schedule('*/2 * * * *', async()=>{
         try {
             const { data } = await axios.get(`${process.env.BASE_URL}?rss_url=https://timesofindia.indiatimes.com/rssfeedstopstories.cms&count=${process.env.ARTICLES_COUNT}&api_key=${process.env.API_KEY}`)
+            console.log(data)
             const articles = data.items.map(article => {
-                return {
-                    ...article, 
-                    pubDate : article.pubDate.split(' ').join('T'), 
-                    description:article.description.split('>')[1],
+                return {...article, 
+                    pubDate : article.pubDate.split(' ').join('T'),
                     source : 'Times of India', 
-                    category : 'Top Stories'
+                    category : 'latest'
                 }
             })
         const insertedArticles = await Article.insertMany(articles, {ordered : false})
@@ -31,12 +31,11 @@ const task=()=>{
         try {
             const { data }=await axios.get(`${process.env.BASE_URL}?rss_url=https://timesofindia.indiatimes.com/rssfeedmostrecent.cms&count=${process.env.ARTICLES_COUNT}&api_key=${process.env.API_KEY}`) 
             const articles=data.items.map(article=>{
-            return{
-                    ...article,
+            return{ ...article,
                     pubDate : article.pubDate.split(' ').join('T'), 
                     description : article.description.split('>')[1],
                     source : 'Times of India', 
-                    category : 'most recent stories'
+                    category : 'recent'
                   }
            })
            const insertedArticles = await Article.insertMany(articles,{ordered : false})
@@ -44,7 +43,7 @@ const task=()=>{
             if(error.code !== 11000){
                 console.log(error)
             }
-        }
+        }   
     })
 
     //Times of India Cricket Feed
@@ -71,6 +70,7 @@ const task=()=>{
     cron.schedule('*/2 * * * *', async () => {
         try {
             const { data } = await axios.get(`${process.env.BASE_URL}?rss_url=https://timesofindia.indiatimes.com/rssfeeds/2647163.cms&count=${process.env.ARTICLES_COUNT}&api_key=${process.env.API_KEY}`)
+            console.log(data)
             const articles = data.items.map(article => {
                 return {...article, 
                     pubDate : article.pubDate.split(' ').join('T'), 
