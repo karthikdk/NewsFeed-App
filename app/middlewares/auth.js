@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 
-const authenticateUser = (req, res, next) => {
+const authUser = (req, res, next) => {
     const token = req.headers.authorization
     if(token){
         try {
@@ -17,4 +17,4 @@ const authenticateUser = (req, res, next) => {
     }
 }
 
-module.exports = authenticateUser
+module.exports = authUser

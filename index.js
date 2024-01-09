@@ -3,9 +3,10 @@ const express=require('express')
 const cors=require('cors')
 const configureDB = require('./config/db')
 const userController = require('./app/controllers/user-controller')
-const authenticateUser = require("./app/middlewares/authenticate-user")
 const task = require("./app/node-cron/cron-job")
 const articlesController = require("./app/controllers/article-controller")
+const authUser = require("./app/middlewares/auth")
+
 
 
 
@@ -17,12 +18,12 @@ app.use(cors())
 
 configureDB()
 
-
+task()
 
 //user APIs
 app.post('/api/users/register',userController.register)
 app.post('/api/users/login',userController.login)
-app.get('/api/users/account',authenticateUser,userController.users)
+app.get('/api/users/account',authUser,userController.show)
 
 //article API
 app.get('/api/articles/list',articlesController.list)
@@ -31,4 +32,3 @@ app.listen(port,()=>{
     console.log('server running on port',port)
 })
 
-task()

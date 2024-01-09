@@ -1,8 +1,9 @@
-const User = require("../models/user-model")
+const User = require('../models/user-model')
 const jwt=require('jsonwebtoken')
 const pick=require('lodash/pick')
 const bcrypt=require('bcryptjs')
 const validator=require('validator')
+
 
 const userController={}
 
@@ -13,7 +14,7 @@ userController.register=async(req,res)=>{
         if(Object.keys(body).length===0){
             return res.status(404).json({error: "data fields not found"})
         }
-        if(!body.email || !body.name || !body.password ){
+        if(!body.name || !body.email || !body.password ){
             return res.status(400).json({error: "invalid data values"})
         }
         if(!validator.isEmail(body.email)) {
@@ -56,11 +57,12 @@ userController.login=async(req,res)=>{
                 res.status(400).json({error: "Incorrect password"})  
             }else{
                 const tokenData={
-                    id:user._id
+                    _id:user._id,
+                    email:user.email
                 }
                 const token=jwt.sign(tokenData,process.env.JWT_SECRET)
                 res.json({
-                    token:`bearer ${token}`
+                    token:`Bearer ${token}`
                 })
             }
         }
@@ -68,9 +70,9 @@ userController.login=async(req,res)=>{
         res.json(error)
     }
 }
-userController.users=async(req,res)=>{
+userController.show = async (req, res) => {
     try {
-        const user=await User.findById(req.tokenData._id, {password : 0})
+        const user = await User.findById(req.tokenData._id, {password : 0})
         res.json(user)
     } catch (error) {
         res.json(error)
